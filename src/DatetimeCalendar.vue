@@ -110,7 +110,7 @@ export default {
 
 .vdatetime-calendar__navigation {
   position: relative;
-  margin: 15px 0;
+  margin-bottom: 15px;
   padding: 0 30px;
   width: 100%;
 }
@@ -148,6 +148,7 @@ export default {
 .vdatetime-calendar__current--month {
   text-align: center;
   text-transform: capitalize;
+  color: #989898;
 }
 
 .vdatetime-calendar__month {
@@ -189,12 +190,14 @@ export default {
   }
 }
 
-.vdatetime-calendar__month__weekday {
-  font-weight: bold;
+.vdatetime-calendar__month__day--selected {
+  background: #4680FE !important;
+  color: white !important;
+  border-radius: 3px;
 }
 
-.vdatetime-calendar__month__day:hover > span > span {
-  background: #eee;
+.vdatetime-calendar__month__weekday {
+  color: #D2D2D2;
 }
 
 .vdatetime-calendar__month__day--selected {

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { DateTime as LuxonDateTime } from 'luxon'
-import Datetime from '../../dist/vue-datetime'
-import '../../dist/vue-datetime.css'
+import Datetime from '../../src/index'
+// import '../../dist/vue-datetime.css'
 import './app.css'
 
 Vue.use(Datetime)

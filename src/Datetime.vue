@@ -8,13 +8,14 @@
            v-bind="$attrs"
            v-on="$listeners"
            @click="open"
+           :hidden="inline"
            @focus="open">
     <input v-if="hiddenName" type="hidden" :name="hiddenName" :value="value">
     <transition-group name="vdatetime-fade" tag="div">
       <div key="overlay" v-if="isOpen" class="vdatetime-overlay" @click.self="cancel"></div>
       <datetime-popup
           key="popup"
-          v-if="isOpen"
+          v-if="isOpen || inline"
           :type="type"
           :datetime="popupDate"
           :phrases="phrases"
@@ -25,7 +26,9 @@
           :max-datetime="popupMaxDatetime"
           @confirm="confirm"
           @cancel="cancel"
+          @end="changeAnyDatetime"
           :auto="auto"
+          :inline="inline"
           :week-start="weekStart"></datetime-popup>
     </transition-group>
   </div>
@@ -62,7 +65,7 @@ export default {
     },
     zone: {
       type: String,
-      default: 'local'
+      default: 'Europe/Moscow'
     },
     format: {
       type: [Object, String],
@@ -110,6 +113,10 @@ export default {
       default () {
         return weekStart()
       }
+    },
+    inline: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -152,6 +159,15 @@ export default {
   },
 
   methods: {
+    changeAnyDatetime (date) {
+      let datetime = date
+
+      if (datetime && this.type === 'date') {
+        datetime = startOfDay(datetime)
+      }
+
+      this.$emit('input', datetime ? datetime.toISO() : '')
+    },
     emitInput () {
       let datetime = this.datetime ? this.datetime.setZone(this.valueZone) : null
 

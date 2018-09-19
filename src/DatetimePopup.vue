@@ -1,6 +1,6 @@
 <template>
-  <div class="vdatetime-popup">
-    <div class="vdatetime-popup__header">
+  <div class="vdatetime-popup" :class="{ inline: inline }">
+    <div class="vdatetime-popup__header" v-if="!inline">
       <div class="vdatetime-popup__year" @click="showYear">{{ year }}</div>
       <div class="vdatetime-popup__date">{{ dateFormatted }}</div>
     </div>
@@ -10,7 +10,6 @@
           @change="onChangeYear"
           :year="year"></datetime-year-picker>
       <datetime-calendar
-          v-if="step === 'date'"
           @change="onChangeDate"
           :year="year"
           :month="month"
@@ -22,7 +21,10 @@
       <datetime-time-picker
           v-if="step === 'time'"
           @change="onChangeTime"
+          @cancelTime="cancelTime"
+          :inline="inline"
           :hour="hour"
+          :phrases="phrases"
           :minute="minute"
           :use12-hour="use12Hour"
           :hour-step="hourStep"
@@ -30,10 +32,30 @@
           :min-time="minTime"
           :max-time="maxTime"></datetime-time-picker>
     </div>
-    <div class="vdatetime-popup__actions">
+    <div class="vdatetime-popup__actions" v-if="!inline">
       <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--cancel" @click="cancel">{{ phrases.cancel }}</div>
       <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--confirm" @click="confirm">{{ phrases.ok }}</div>
     </div>
+    <div class="vdatetime-popup__inline-bottom">
+      <input class="vdatetime-popup__inline-bottom-date" type="text" disabled="disabled" v-model="showDate">
+      <input class="vdatetime-popup__inline-bottom-time" type="text" v-model="showTime" @click="showTimePopup">
+    </div>
+    <div class="vdatetime-popup__inline-bottom _center">
+      <select class="vdatetime-popup__inline-bottom-timezone" v-model="timezone" @change="changeTimezone">
+        <option value="Europe/Kaliningrad">Калининград (MSK–1)</option>
+        <option value="Europe/Moscow">Москва (MSK)</option>
+        <option value="Europe/Samara">Самара (MSK+1)</option>
+        <option value="Asia/Yekaterinburg">Екатеринбург (MSK+2)</option>
+        <option value="Asia/Omsk">Омск (MSK+3)</option>
+        <option value="Asia/Krasnoyarsk">Красноярск (MSK+4)</option>
+        <option value="Asia/Irkutsk">Иркутск (MSK+5)</option>
+        <option value="Asia/Yakutsk">Якутск (MSK+6)</option>
+        <option value="Asia/Vladivostok">Владивосток (MSK+7)</option>
+        <option value="Asia/Magadan">Магадан (MSK+8)</option>
+        <option value="Asia/Kamchatka">Камчатка (MSK+9)</option>
+      </select>
+    </div>
+
   </div>
 </template>
 
@@ -100,6 +122,10 @@ export default {
     weekStart: {
       type: Number,
       default: 1
+    },
+    inline: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -108,9 +134,12 @@ export default {
 
     return {
       newDatetime: this.datetime,
+      showDate: this.datetime.toFormat('dd.MM.yyyy'),
+      showTime: this.datetime.toFormat('HH:mm'),
       flow: flow,
       step: flow.first(),
-      timePartsTouched: []
+      timePartsTouched: [],
+      timezone: 'Europe/Moscow'
     }
   },
 
@@ -163,6 +192,18 @@ export default {
   },
 
   methods: {
+    changeTimezone () {
+      this.showTime = this.newDatetime.setZone(this.timezone).toFormat('HH:mm')
+      this.showDate = this.newDatetime.setZone(this.timezone).toFormat('dd.MM.yyyy')
+      this.$emit('end', this.newDatetime.setZone(this.timezone))
+    },
+    cancelTime () {
+      this.step = 'date'
+    },
+    showTimePopup (event) {
+      event.target.blur()
+      this.step = 'time'
+    },
     nextStep () {
       this.step = this.flow.next(this.step)
       this.timePartsTouched = []
@@ -190,10 +231,11 @@ export default {
     },
     onChangeDate (year, month, day) {
       this.newDatetime = this.newDatetime.set({ year, month, day })
-
-      if (this.auto) {
+      this.showDate = this.newDatetime.toFormat('dd.MM.yyyy')
+      if (this.auto && !this.inline) {
         this.nextStep()
       }
+      this.$emit('end', this.newDatetime)
     },
     onChangeTime ({ hour, minute, suffixTouched }) {
       if (suffixTouched) {
@@ -210,10 +252,14 @@ export default {
         this.timePartsTouched['minute'] = true
       }
 
+      this.showTime = this.newDatetime.toFormat('HH:mm')
+
       const goNext = this.auto && this.timePartsTouched['hour'] && this.timePartsTouched['minute'] && (
         this.timePartsTouched['suffix'] ||
         !this.use12Hour
       )
+
+      this.$emit('end', this.newDatetime)
 
       if (goNext) {
         this.nextStep()
@@ -237,6 +283,8 @@ export default {
 
 <style>
 .vdatetime-popup {
+  min-width: 331px;
+  padding-top: 24px;
   box-sizing: border-box;
   z-index: 1000;
   position: fixed;
@@ -254,6 +302,13 @@ export default {
   & * {
     box-sizing: border-box;
   }
+}
+
+.vdatetime-popup.inline {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
 }
 
 .vdatetime-popup__header {
@@ -294,5 +349,41 @@ export default {
   &:hover {
     color: #444;
   }
+}
+
+.vdatetime-popup__inline-bottom {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 24px;
+  padding-bottom: 0;
+}
+
+.vdatetime-popup__inline-bottom._center {
+  display: flex;
+  justify-content: left;
+  padding-bottom: 24px;
+}
+
+.vdatetime-popup__inline-bottom-date {
+  max-width: 140px;
+  font-size: 14px !important;
+  border-radius: 3px;
+  border-color: #D2D2D2;
+}
+
+.vdatetime-popup__inline-bottom-time {
+  max-width: 127px;
+  font-size: 14px !important;
+  border-radius: 3px;
+  border-color: #D2D2D2;
+}
+
+.vdatetime-popup__inline-bottom-timezone {
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 14px !important;
+  color: #989898;
 }
 </style>

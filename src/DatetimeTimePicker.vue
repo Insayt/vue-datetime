@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'vdatetime-time-picker': true, 'vdatetime-time-picker__with-suffix': use12Hour}">
+  <div :class="{'vdatetime-time-picker': true, 'vdatetime-time-picker__with-suffix': use12Hour, inline: inline}">
     <div class="vdatetime-time-picker__list vdatetime-time-picker__list--hours" ref="hourList">
       <div class="vdatetime-time-picker__item" v-for="hour in hours" @click="selectHour(hour)" :class="{'vdatetime-time-picker__item--selected': hour.selected, 'vdatetime-time-picker__item--disabled': hour.disabled}">{{ formatHour(hour.number) }}</div>
     </div>
@@ -10,6 +10,10 @@
       <div class="vdatetime-time-picker__item" @click="selectSuffix('am')" :class="{'vdatetime-time-picker__item--selected': hour < 12}">am</div>
       <div class="vdatetime-time-picker__item" @click="selectSuffix('pm')" :class="{'vdatetime-time-picker__item--selected': hour >= 12}">pm</div>
     </div>
+    <div class="vdatetime-time-picker__bottom">
+      <!--<div class="vdatetime-popup__actions__button vdatetime-popup__actions__button&#45;&#45;cancel" @click="$emit('cancelTime')">{{ phrases.cancel }}</div>-->
+      <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--confirm" @click="selectAll">{{ phrases.ok }}</div>
+    </div>
   </div>
 </template>
 
@@ -18,6 +22,15 @@ import { hours, minutes, pad, timeComponentIsDisabled } from './util'
 
 export default {
   props: {
+    phrases: {
+      type: Object,
+      default () {
+        return {
+          cancel: 'Cancel',
+          ok: 'Ok'
+        }
+      }
+    },
     hour: {
       type: Number,
       required: true
@@ -45,6 +58,10 @@ export default {
     maxTime: {
       type: String,
       default: null
+    },
+    inline: {
+      type: Boolean,
+      default: false
     }
   },
 
@@ -88,6 +105,16 @@ export default {
   },
 
   methods: {
+    selectAll () {
+      let hour = this.hours.find((val) => {
+        return val.selected
+      })
+      let minute = this.minutes.find((val) => {
+        return val.selected
+      })
+      this.$emit('change', { minute: parseInt(minute.number), hour: parseInt(hour.number) })
+      this.$emit('cancelTime')
+    },
     selectHour (hour) {
       if (hour.disabled) {
         return
@@ -153,10 +180,19 @@ export default {
   }
 }
 
+.vdatetime-time-picker.inline {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: white;
+  width: 100%;
+  height: 100%;
+}
+
 .vdatetime-time-picker__list {
   float: left;
   width: 50%;
-  height: 305px;
+  height: 350px;
   overflow-y: scroll;
 
   &::-webkit-scrollbar {
@@ -197,5 +233,10 @@ export default {
   opacity: 0.4;
   cursor: default;
   font-size: 20px !important;
+}
+
+.vdatetime-time-picker__bottom {
+  text-align: right;
+  padding-right: 20px;
 }
 </style>
