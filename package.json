@@ -23,12 +23,6 @@
     "clean": "rimraf dist && rimraf build/dist",
     "build": "node build/build.js",
     "build:dll": "webpack --progress --config build/webpack.config.dll.js",
-    "lint": "yon run lint:js && yon run lint:css",
-    "lint:js": "eslint --ext js --ext vue src test/**/*.spec.js test/*.js build",
-    "lint:js:fix": "yon run lint:js -- --fix",
-    "lint:css": "stylelint src/**/*.{vue,css}",
-    "lint:staged": "lint-staged",
-    "pretest": "yon run lint",
     "test": "cross-env BABEL_ENV=test karma start test/karma.conf.js --single-run",
     "dev": "webpack-dashboard -- webpack-dev-server --config build/webpack.config.dev.js --open",
     "dev:coverage": "cross-env BABEL_ENV=test karma start test/karma.conf.js",
@@ -48,7 +42,6 @@
       "stylelint"
     ]
   },
-  "pre-commit": "lint:staged",
   "devDependencies": {
     "add-asset-html-webpack-plugin": "^2.0.0",
     "auto-changelog": "^1.3.0",

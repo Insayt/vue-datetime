@@ -106,10 +106,10 @@ export default {
 
   methods: {
     selectAll () {
-      let hour = this.hours.find((val) => {
+      const hour = this.hours.find((val) => {
         return val.selected
       })
-      let minute = this.minutes.find((val) => {
+      const minute = this.minutes.find((val) => {
         return val.selected
       })
       this.$emit('change', { minute: parseInt(minute.number), hour: parseInt(hour.number) })
