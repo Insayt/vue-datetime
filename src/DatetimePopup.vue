@@ -126,6 +126,10 @@ export default {
     inline: {
       type: Boolean,
       default: false
+    },
+    zone: {
+      type: String,
+      default: 'Europe/Moscow'
     }
   },
 
@@ -139,7 +143,7 @@ export default {
       flow: flow,
       step: flow.first(),
       timePartsTouched: [],
-      timezone: 'Europe/Moscow'
+      timezone: this.zone
     }
   },
 

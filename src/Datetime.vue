@@ -27,6 +27,7 @@
           @confirm="confirm"
           @cancel="cancel"
           @end="changeAnyDatetime"
+          :zone="zone"
           :auto="auto"
           :inline="inline"
           :week-start="weekStart"></datetime-popup>
