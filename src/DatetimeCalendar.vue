@@ -204,7 +204,6 @@ export default {
   & > span > span,
   &:hover > span > span {
     color: #fff;
-    background: #3f51b5;
   }
 }
 

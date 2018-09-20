@@ -297,11 +297,13 @@ export default {
   transform: translate(-50%, -50%);
   width: 340px;
   max-width: calc(100% - 30px);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
   color: #444;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   background: #fff;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  box-shadow: none;
+  border: 1px solid #DBDBDB;
+  border-radius: 3px;
 
   & * {
     box-sizing: border-box;
@@ -373,14 +375,16 @@ export default {
   max-width: 140px;
   font-size: 14px !important;
   border-radius: 3px;
-  border-color: #D2D2D2;
+  border: 1px solid #D2D2D2;
+  padding: 8px 10px;
 }
 
 .vdatetime-popup__inline-bottom-time {
   max-width: 127px;
   font-size: 14px !important;
   border-radius: 3px;
-  border-color: #D2D2D2;
+  border: 1px solid #D2D2D2;
+  padding: 8px 10px;
 }
 
 .vdatetime-popup__inline-bottom-timezone {
