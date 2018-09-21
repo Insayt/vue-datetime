@@ -10,7 +10,7 @@
           @change="onChangeYear"
           :year="year"></datetime-year-picker>
       <datetime-calendar
-          v-if="step === 'date'"
+          v-if="step === 'date' || inline"
           @change="onChangeDate"
           :year="year"
           :month="month"
@@ -240,7 +240,9 @@ export default {
       if (this.auto && !this.inline) {
         this.nextStep()
       }
-      this.$emit('end', this.newDatetime)
+      if (this.inline) {
+        this.$emit('end', this.newDatetime)
+      }
     },
     onChangeTime ({ hour, minute, suffixTouched }) {
       if (suffixTouched) {
@@ -264,7 +266,9 @@ export default {
         !this.use12Hour
       )
 
-      this.$emit('end', this.newDatetime)
+      if (this.inline) {
+        this.$emit('end', this.newDatetime)
+      }
 
       if (goNext) {
         this.nextStep()
