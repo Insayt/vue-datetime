@@ -110,9 +110,14 @@ export default {
 
 .vdatetime-calendar__navigation {
   position: relative;
-  margin-bottom: 15px;
+  margin: 15px 0;
   padding: 0 30px;
   width: 100%;
+}
+
+.inline .vdatetime-calendar__navigation {
+  margin: 0;
+  margin-bottom: 15px;
 }
 
 .vdatetime-calendar__navigation--previous,
@@ -190,21 +195,31 @@ export default {
   }
 }
 
-.vdatetime-calendar__month__day--selected {
+.inline .vdatetime-calendar__month__day--selected {
   background: #4680FE !important;
   color: white !important;
   border-radius: 3px;
 }
 
-.vdatetime-calendar__month__weekday {
+.inline .vdatetime-calendar__month__weekday {
   color: #D2D2D2;
 }
 
+
 .vdatetime-calendar__month__day--selected {
-  & > span > span,
-  &:hover > span > span {
-    color: #fff;
-  }
+& > span > span,
+&:hover > span > span {
+   color: #fff;
+   background: #3f51b5;
+ }
+}
+
+.inline .vdatetime-calendar__month__day--selected {
+& > span > span,
+&:hover > span > span {
+   color: #fff;
+   background: none;
+ }
 }
 
 .vdatetime-calendar__month__day--disabled {

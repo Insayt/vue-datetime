@@ -10,8 +10,8 @@
       <div class="vdatetime-time-picker__item" @click="selectSuffix('am')" :class="{'vdatetime-time-picker__item--selected': hour < 12}">am</div>
       <div class="vdatetime-time-picker__item" @click="selectSuffix('pm')" :class="{'vdatetime-time-picker__item--selected': hour >= 12}">pm</div>
     </div>
-    <div class="vdatetime-time-picker__bottom">
-      <!--<div class="vdatetime-popup__actions__button vdatetime-popup__actions__button&#45;&#45;cancel" @click="$emit('cancelTime')">{{ phrases.cancel }}</div>-->
+    <div class="vdatetime-time-picker__bottom" v-if="inline">
+      <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--cancel" @click="$emit('cancelTime')">{{ phrases.cancel }}</div>
       <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--confirm" @click="selectAll">{{ phrases.ok }}</div>
     </div>
   </div>

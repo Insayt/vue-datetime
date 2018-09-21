@@ -10,6 +10,7 @@
           @change="onChangeYear"
           :year="year"></datetime-year-picker>
       <datetime-calendar
+          v-if="step === 'date'"
           @change="onChangeDate"
           :year="year"
           :month="month"
@@ -36,11 +37,11 @@
       <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--cancel" @click="cancel">{{ phrases.cancel }}</div>
       <div class="vdatetime-popup__actions__button vdatetime-popup__actions__button--confirm" @click="confirm">{{ phrases.ok }}</div>
     </div>
-    <div class="vdatetime-popup__inline-bottom">
+    <div class="vdatetime-popup__inline-bottom" v-if="inline">
       <input class="vdatetime-popup__inline-bottom-date" type="text" disabled="disabled" v-model="showDate">
       <input class="vdatetime-popup__inline-bottom-time" type="text" v-model="showTime" @click="showTimePopup">
     </div>
-    <div class="vdatetime-popup__inline-bottom _center">
+    <div class="vdatetime-popup__inline-bottom _center" v-if="inline">
       <select class="vdatetime-popup__inline-bottom-timezone" v-model="timezone" @change="changeTimezone">
         <option value="Europe/Kaliningrad">Калининград (MSK–1)</option>
         <option value="Europe/Moscow">Москва (MSK)</option>
@@ -287,8 +288,6 @@ export default {
 
 <style>
 .vdatetime-popup {
-  min-width: 331px;
-  padding-top: 24px;
   box-sizing: border-box;
   z-index: 1000;
   position: fixed;
@@ -315,6 +314,8 @@ export default {
   left: auto;
   top: auto;
   transform: none;
+  min-width: 331px;
+  padding-top: 24px;
 }
 
 .vdatetime-popup__header {
